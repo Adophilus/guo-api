@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    showSql: true
+    hibernate:
+      ddlAuto: update
+
+server:
+  port: ${PORT:8080}
+
+java:
+  runtime:
+    version: 18

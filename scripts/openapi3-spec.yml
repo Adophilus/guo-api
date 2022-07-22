@@ -1,0 +1,844 @@
+openapi: 3.0.0
+info:
+  title: 'Gụọ API'
+  description: Gụọ API enables users query data on genres, series, books and their authors through an intuitive API schema as defined by the [OpenAPI Specification v3](https://swagger.io/specification/). It virtually simulate the structure of a library
+  termsOfService: https://github.com/Adophilus/guo-api/blob/main/TERMS-OF-SERVICE.txt
+  contact:
+    email: uchenna19of@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: '1.0.0'
+externalDocs:
+  description: Find out more on the GitHub repo
+  url: https://github.com/Adophilus/guo-api
+servers:
+  - url: 'https://guo-api.adophilus.xyz/api'
+paths:
+  /authors:
+    post:
+      tags:
+      - author
+      summary: Add a new author to the library
+      description: Using this endpoint, a new author collection can be added to the
+        library
+      operationId: addAuthor
+      requestBody:
+        description: The author that needs to be added to the library
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorPost'
+        required: true
+      responses:
+        '201':
+          description: Author created successfully!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        '400':
+          description: Invalid Author ID!
+        '409':
+          description: Author ID taken!
+    get:
+      summary: 'Fetch all authors from the library'
+      description: Using this endpoint, all authors collections can be fetched from the library
+      operationId: getAuthors
+      tags:
+        - author
+      responses:
+        '200':
+          description: 'Returns a list of authors'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorSlim'
+  /authors/{authorId}:
+    get:
+      tags:
+      - author
+      summary: Fetch author by {authorId} from the library
+      description: Using this endpoint, the author with a corresponding {authorId} will be fetched from the library
+      operationId: getAuthorById
+      parameters:
+      - name: authorId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Returns an Author object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        404:
+          description: The author with a matching {authorID} was not found in the library
+    put:
+      tags:
+      - author
+      summary: Update an existing author with a matching {authorId}
+      description: Using this endpoint, an existing author with a matching {authorId} in the library can be modified
+      operationId: updateAuthor
+      parameters:
+      - name: authorId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The author data that needs to be modified in the library
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorPut'
+        required: true
+      responses:
+        200:
+          description: Returns an Author object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        404:
+          description: The author with a matching {authorID} was not found in the library
+        400:
+          description: Invalid Author data!
+        409:
+          description: Author ID taken!
+    delete:
+      summary: 'Delete an existing author with a matching {authorId}'
+      description: Using this endpoint, an existing author collections with a matching {authorId} can be deleted from the library
+      operationId: deleteAuthor
+      parameters:
+      - name: authorId
+        in: path
+        required: true
+        schema:
+          type: string
+      tags:
+        - author
+      responses:
+        '410':
+          description: 'The Author with a matching {authorId} has been deleted!'
+  /genres:
+    post:
+      tags:
+      - genre
+      summary: Add a new genre to the library
+      description: Using this endpoint, a new genre collection can be added to the
+        library
+      operationId: addGenre
+      requestBody:
+        description: The genre that needs to be added to the library
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenrePost'
+        required: true
+      responses:
+        '201':
+          description: Genre created successfully!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Genre'
+        '400':
+          description: Invalid Genre ID!
+        '409':
+          description: Genre ID taken!
+    get:
+      summary: 'Fetch all genres from the library'
+      description: Using this endpoint, all genres collections can be fetched from the library
+      operationId: getGenres
+      tags:
+        - genre
+      responses:
+        '200':
+          description: 'Returns a list of genres'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenreSlim'
+  /genres/{genreId}:
+    get:
+      tags:
+      - genre
+      summary: Fetch genre by {genreId} from the library
+      description: Using this endpoint, the genre with a corresponding {genreId} will be fetched from the library
+      operationId: getGenreById
+      parameters:
+      - name: genreId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Returns an Genre object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Genre'
+        404:
+          description: The genre with a matching {genreID} was not found in the library
+    put:
+      tags:
+      - genre
+      summary: Update an existing genre with a matching {genreId}
+      description: Using this endpoint, an existing genre with a matching {genreId} in the library can be modified
+      operationId: updateGenre
+      parameters:
+      - name: genreId
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        description: The genre data that needs to be modified in the library
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenrePut'
+        required: true
+      responses:
+        200:
+          description: Returns an Genre object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Genre'
+        404:
+          description: The genre with a matching {genreID} was not found in the library
+        400:
+          description: Invalid Genre name!
+        409:
+          description: Genre name taken!
+    delete:
+      summary: 'Delete an existing genre with a matching {genreId}'
+      description: Using this endpoint, an existing genre collections with a matching {genreId} can be deleted from the library
+      operationId: deleteGenre
+      parameters:
+      - name: genreId
+        in: path
+        required: true
+        schema:
+          type: integer
+      tags:
+        - genre
+      responses:
+        '410':
+          description: 'The Genre with a matching {genreId} has been deleted!'
+  /series:
+    post:
+      tags:
+      - series
+      summary: Add a new series to the library
+      description: Using this endpoint, a new series collection can be added to the
+        library
+      operationId: addSeries
+      requestBody:
+        description: The series that needs to be added to the library
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SeriesPost'
+        required: true
+      responses:
+        '201':
+          description: Series created successfully!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Series'
+        '400':
+          description: Invalid Series ID!
+        '409':
+          description: Series ID taken!
+    get:
+      summary: 'Fetch all series from the library'
+      description: Using this endpoint, all series collections can be fetched from the library
+      operationId: getSeries
+      tags:
+        - series
+      responses:
+        '200':
+          description: 'Returns a list of series'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeriesSlim'
+  /series/{seriesId}:
+    get:
+      tags:
+      - series
+      summary: Fetch series by {seriesId} from the library
+      description: Using this endpoint, the series with a corresponding {seriesId} will be fetched from the library
+      operationId: getSeriesById
+      parameters:
+      - name: seriesId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Returns an Series object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Series'
+        404:
+          description: The series with a matching {seriesID} was not found in the library
+    put:
+      tags:
+      - series
+      summary: Update an existing series with a matching {seriesId}
+      description: Using this endpoint, an existing series with a matching {seriesId} in the library can be modified
+      operationId: updateSeries
+      parameters:
+      - name: seriesId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The series data that needs to be modified in the library
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SeriesPut'
+        required: true
+      responses:
+        200:
+          description: Returns an Series object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Series'
+        404:
+          description: The series with a matching {seriesID} was not found in the library
+        400:
+          description: Invalid Series data!
+        409:
+          description: Series ID taken!
+    delete:
+      summary: 'Delete an existing Series with a matching {SeriesId}'
+      description: Using this endpoint, an existing Series collections with a matching {SeriesId} can be deleted from the library
+      operationId: deleteSeries
+      parameters:
+      - name: seriesId
+        in: path
+        required: true
+        schema:
+          type: string
+      tags:
+        - Series
+      responses:
+        '410':
+          description: 'The Series with a matching {SeriesId} has been deleted!'
+  /books:
+    post:
+      tags:
+      - book
+      summary: Add a new book to the library
+      description: Using this endpoint, a new book collection can be added to the
+        library
+      operationId: addBook
+      requestBody:
+        description: The book that needs to be added to the library
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookPost'
+        required: true
+      responses:
+        '201':
+          description: Book created successfully!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookSlim'
+        '400':
+          description: Invalid Book ID!
+        '409':
+          description: Book ID taken!
+    get:
+      summary: 'Fetch all books from the library'
+      description: Using this endpoint, all books collections can be fetched from the library
+      operationId: getBooks
+      tags:
+        - book
+      responses:
+        '200':
+          description: 'Returns a list of books'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookSlim'
+  /books/{bookId}:
+    get:
+      tags:
+      - book
+      summary: Fetch book by {bookId} from the library
+      description: Using this endpoint, the book with a corresponding {bookId} will be fetched from the library
+      operationId: getBookById
+      parameters:
+      - name: bookId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Returns an Book object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookSlim'
+        404:
+          description: The book with a matching {bookID} was not found in the library
+    put:
+      tags:
+      - book
+      summary: Update an existing book with a matching {bookId}
+      description: Using this endpoint, an existing book with a matching {bookId} in the library can be modified
+      operationId: updateBook
+      parameters:
+      - name: bookId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The book data that needs to be modified in the library
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookPut'
+        required: true
+      responses:
+        200:
+          description: Returns an Book object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookSlim'
+        404:
+          description: The book with a matching {bookID} was not found in the library
+        400:
+          description: Invalid Book data!
+        409:
+          description: Book ID taken!
+    delete:
+      summary: 'Delete an existing book with a matching {bookId}'
+      description: Using this endpoint, an existing book collections with a matching {bookId} can be deleted from the library
+      operationId: deleteBook
+      parameters:
+      - name: bookId
+        in: path
+        required: true
+        schema:
+          type: string
+      tags:
+        - book
+      responses:
+        '410':
+          description: 'The Book with a matching {bookId} has been deleted!'
+components:
+  schemas:
+    Author:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          example: "UC101"
+        firstName:
+          type: "string"
+          example: "Adophilus"
+        lastName:
+          type: "string"
+          example: "Brian"
+        birthDay:
+          type: "string"
+          example: "2022-06-01"
+        country:
+          type: "string"
+          example: "Nigeria"
+        books:
+          type: "array"
+          items:
+            $ref: '#/components/schemas/BookSlim'
+    AuthorPost:
+      type: object
+      required:
+      - id
+      - firstName
+      - lastName
+      - birthDay
+      - country
+      properties:
+        id:
+          type: "string"
+          example: "UC101"
+        firstName:
+          type: "string"
+          example: "Adophilus"
+        lastName:
+          type: "string"
+          example: "Brian"
+        birthDay:
+          type: "string"
+          example: "2022-06-01"
+        country:
+          type: "string"
+          example: "Nigeria"
+        books:
+          type: "array"
+          items:
+            type: string
+            description: book ID
+    AuthorPut:
+      type: object
+      properties:
+        id:
+          type: "string"
+          example: "UC101"
+        firstName:
+          type: "string"
+          example: "Adophilus"
+        lastName:
+          type: "string"
+          example: "Brian"
+        birthDay:
+          type: "string"
+          example: "2022-06-01"
+        country:
+          type: "string"
+          example: "Nigeria"
+        books:
+          type: "array"
+          items:
+            type: string
+            description: book ID
+    AuthorSlim:
+      type: object
+      properties:
+        id:
+          type: "string"
+          example: "UC101"
+        firstName:
+          type: "string"
+          example: "Adophilus"
+        lastName:
+          type: "string"
+          example: "Brian"
+        birthDay:
+          type: "string"
+          example: "2022-06-01"
+        country:
+          type: "string"
+          example: "Nigeria"
+        books:
+          type: "array"
+          items:
+            type: string
+            description: book ID
+    Genre:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+          example: "Amazing genre"
+          description: The name of the genre
+        books:
+          items:
+            $ref: '#/components/schemas/BookSlim'
+    GenrePost:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: "string"
+          example: "Amazing genre"
+          description: The name of the genre
+    GenrePut:
+      type: object
+      properties:
+        name:
+          type: "string"
+          example: "Amazing genre"
+          description: The name of the genre
+        books:
+          type: "array"
+          description: A list book IDs belonging to this genre
+          items:
+            type: string
+            description: book ID
+    GenreSlim:
+      type: object
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+          example: "Amazing genre"
+          description: The name of the genre
+        books:
+          type: "array"
+          description: A list book IDs belonging to this genre
+          items:
+            type: string
+            description: book ID
+    Series:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          example: "SC-101"
+        name:
+          type: "string"
+          example: "Amazing series"
+        plannedVolumes:
+          type: "integer"
+          description: The number of volumes the series was intended to have
+          example: 1
+          default: 1
+        bookTourEvents:
+          type: "integer"
+          description: The number of book tour events the series has/had
+          example: 3
+          default: 0
+        books:
+          type: "array"
+          items:
+            $ref: '#/components/schemas/BookSlim'
+    SeriesPost:
+      type: object
+      required:
+      - id
+      - name
+      - plannedVolumes
+      - bookTourEvents
+      properties:
+        id:
+          type: "string"
+          example: "SC-101"
+        name:
+          type: "string"
+          example: "Amazing series"
+        plannedVolumes:
+          type: "integer"
+          description: The number of volumes the series was intended to have
+          example: 1
+          default: 1
+        bookTourEvents:
+          type: "integer"
+          description: The number of book tour events the series has/had
+          example: 3
+          default: 0
+        books:
+          type: "array"
+          description: A list book IDs belonging to this genre
+          items:
+            type: string
+            description: book ID
+    SeriesPut:
+      type: object
+      properties:
+        id:
+          type: "string"
+          example: "SC-101"
+        name:
+          type: "string"
+          example: "Amazing series"
+        plannedVolumes:
+          type: "integer"
+          description: The number of volumes the series was intended to have
+          example: 1
+          default: 1
+        bookTourEvents:
+          type: "integer"
+          description: The number of book tour events the series has/had
+          example: 3
+          default: 0
+        books:
+          type: "array"
+          description: A list book IDs belonging to this genre
+          items:
+            type: string
+            description: book ID
+    SeriesSlim:
+      type: object
+      properties:
+        id:
+          type: "string"
+          example: "SC-101"
+        name:
+          type: "string"
+          example: "Amazing series"
+        plannedVolumes:
+          type: "integer"
+          description: The number of volumes the series was intended to have
+          example: 1
+          default: 1
+        bookTourEvents:
+          type: "integer"
+          description: The number of book tour events the series has/had
+          example: 3
+          default: 0
+        books:
+          type: "array"
+          description: A list book IDs belonging to this genre
+          items:
+            type: string
+            description: book ID
+    Book:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          example: "BK101"
+        title:
+          type: "string"
+          example: "Amazing Book"
+        volume:
+          type: "integer"
+          example: 1
+        comment:
+          type: "string"
+          example: "This book is the most amazing book you'll ever read"
+          description: The comment of the book
+        authors:
+          type: "array"
+          description: author ID
+          example: "[ '{authorsId1}', ... ]"
+          items:
+            $ref: '#/components/schemas/AuthorSlim'
+        genres:
+          type: "array"
+          description: genre ID
+          example: "[ {genreId1}, ... ]"
+          items:
+            $ref: '#/components/schemas/GenreSlim'
+        series:
+          type: "array"
+          description: series ID
+          example: "[ '{seriesId1}', ... ]"
+          items:
+            $ref: '#/components/schemas/SeriesSlim'
+    BookPost:
+      type: object
+      required:
+      - id
+      - title
+      - volume
+      - comment
+      - authors
+      - genres
+      - series
+      properties:
+        id:
+          type: "string"
+          example: "BK101"
+        title:
+          type: "string"
+          example: "Amazing Book"
+        volume:
+          type: "integer"
+          example: 1
+        comment:
+          type: "string"
+          example: "This book is the most amazing book you'll ever read"
+          description: The comment of the book
+        authors:
+          type: "array"
+          description: author ID
+          example: "[ '{authorsId1}', ... ]"
+          items:
+            type: "string"
+        genres:
+          type: "array"
+          description: genre ID
+          example: "[ {genreId1}, ... ]"
+          items:
+            type: "integer"
+        series:
+          type: "array"
+          description: series ID
+          example: "[ '{seriesId1}', ... ]"
+          items:
+            type: "string"
+    BookPut:
+      type: object
+      properties:
+        id:
+          type: "string"
+          example: "BK101"
+        title:
+          type: "string"
+          example: "Amazing Book"
+        volume:
+          type: "integer"
+          example: 1
+        comment:
+          type: "string"
+          example: "This book is the most amazing book you'll ever read"
+          description: The comment of the book
+        authors:
+          type: "array"
+          description: author ID
+          example: "[ '{authorsId1}', ... ]"
+          items:
+            type: "string"
+        genres:
+          type: "array"
+          description: genre ID
+          example: "[ {genreId1}, ... ]"
+          items:
+            type: "integer"
+        series:
+          type: "array"
+          description: series ID
+          example: "[ '{seriesId1}', ... ]"
+          items:
+            type: "string"
+    BookSlim:
+      type: object
+      properties:
+        id:
+          type: "string"
+          example: "BK101"
+        title:
+          type: "string"
+          example: "Amazing Book"
+        volume:
+          type: "integer"
+          example: 1
+        comment:
+          type: "string"
+          example: "This book is the most amazing book you'll ever read"
+          description: The comment of the book
+        authors:
+          type: "array"
+          description: author ID
+          example: "[ '{authorsId1}', ... ]"
+          items:
+            type: "string"
+        genres:
+          type: "array"
+          description: genre ID
+          example: "[ {genreId1}, ... ]"
+          items:
+            type: "integer"
+        series:
+          type: "array"
+          description: series ID
+          example: "[ '{seriesId1}', ... ]"
+          items:
+            type: "string"

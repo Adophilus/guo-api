@@ -1,0 +1,237 @@
+environment:
+  vars:
+    host: http://localhost:8080
+    api: "http://localhost:8080/api"
+  headers:
+    Content-Type: application/json
+requests:
+  # CREATE
+  - name: POST new genre
+    url: "{{api}}/genres"
+    method: post
+    body:
+      name: Test
+    expect:
+      status: 201
+      values:
+        .name: Test
+    set:
+      - var: genre_id
+        from: .id
+      - var: genre_name
+        from: .name
+  - name: POST new series
+    url: "{{api}}/series"
+    method: post
+    body:
+      id: NG-ENG
+      name: Super Awesome Series
+      plannedVolumes: 2
+      bookTourEvents: 10
+    expect:
+      status: 201
+      values:
+        .id: NG-ENG
+    set:
+      - var: series_id
+        from: .id
+  - name: POST new author
+    url: "{{api}}/authors"
+    method: post
+    body:
+      id: UC101
+      firstName: Uchenna
+      lastName: Ofoma
+      birthDay: 2022-07-16
+      country: Nigeria
+    expect:
+      status: 201
+      values:
+        .id: UC101
+    set:
+      - var: author_id
+        from: .id
+  - name: POST new book
+    url: "{{api}}/books"
+    method: post
+    body:
+      id: NG200
+      title: Amazing Book
+      comment: This book is really cool!!!
+      volume: 2
+      genres:
+        - "{{genre_id}}"
+      series:
+        - "{{series_id}}"
+      authors:
+        - "{{author_id}}"
+    expect:
+      status: 201
+      values:
+        .id: NG200
+        .authors.[0].id: UC101 # "{{author_id}}"
+        .genres.[0]: Test # "{{genre_name}}"
+        .series.[0].id: NG-ENG # "{{series_id}}"
+    set:
+      - var: book_id
+        from: .id
+
+  # READ
+  - name: GET all genres
+    url: "{{api}}/genres"
+    method: get
+    expect:
+      status: 200
+      values:
+        .[0].name:
+          exists: true
+  - name: GET all series
+    url: "{{api}}/series"
+    method: get
+    expect:
+      status: 200
+      values:
+        .[0].id:
+          exists: true
+  - name: GET all authors
+    url: "{{api}}/authors"
+    method: get
+    expect:
+      status: 200
+      values:
+        .[0].id:
+          exists: true
+  - name: GET all books
+    url: "{{api}}/books"
+    method: get
+    expect:
+      status: 200
+      values:
+        .[0].id:
+          exists: true
+
+
+  # READ (BY ID)
+  - name: GET genre by id
+    url: "{{api}}/genres/{{genre_id}}"
+    method: get
+    expect:
+      status: 200
+      values:
+        .id:
+          exists: true
+  - name: GET series by id
+    url: "{{api}}/series/{{series_id}}"
+    method: get
+    expect:
+      status: 200
+      values:
+        .id:
+          exists: true
+  - name: GET author by id
+    url: "{{api}}/authors/{{author_id}}"
+    method: get
+    expect:
+      status: 200
+      values:
+        .id:
+          exists: true
+  - name: GET author by id
+    url: "{{api}}/books/{{book_id}}"
+    method: get
+    expect:
+      status: 200
+      values:
+        .id:
+          exists: true
+        .authors.[0].id: UC101 # "{{author_id}}"
+        .genres.[0]: Test # "{{genre_name}}"
+        .series.[0].id: NG-ENG # "{{series_id}}"
+
+  # READ (BY ID) (INEXISTENT)
+  - name: GET (inexistent) genre by id
+    url: "{{api}}/genres/0"
+    method: get
+    expect:
+      status: 404
+  - name: GET (inexistent) series by id
+    url: "{{api}}/series/inexistent"
+    method: get
+    expect:
+      status: 404
+  - name: GET (inexistent) author by id
+    url: "{{api}}/authors/inexistent"
+    method: get
+    expect:
+      status: 404
+  - name: GET (inexistent) book by id
+    url: "{{api}}/books/inexistent"
+    method: get
+    expect:
+      status: 404
+
+  
+  # UPDATE
+  - name: PUT genre
+    url: "{{api}}/genres/{{genre_id}}"
+    method: put
+    body:
+      name: Changed Test
+    expect:
+      status: 200
+      values:
+        .name: Changed Test
+  - name: PUT series
+    url: "{{api}}/series/{{series_id}}"
+    method: put
+    body:
+      plannedVolumes: 5
+      bookTourEvents: 2
+    expect:
+      status: 200
+      values:
+        .plannedVolumes: 5
+        .bookTourEvents: 2
+        .id:
+          exists: true
+  - name: PUT author
+    url: "{{api}}/authors/{{author_id}}"
+    method: put
+    body:
+      firstName: Adophilus
+    expect:
+      status: 200
+      values:
+        .firstName: Adophilus
+  - name: PUT book
+    url: "{{api}}/books/{{book_id}}"
+    method: put
+    body:
+      comment: This comment was updated
+    expect:
+      status: 200
+      values:
+        .comment: This comment was updated
+
+
+  # DELETE
+  - name: DELETE genre
+    url: "{{api}}/genres/{{genre_id}}"
+    method: delete
+    expect:
+      status: 410
+  - name: DELETE series
+    url: "{{api}}/series/{{series_id}}"
+    method: delete
+    expect:
+      status: 410
+  - name: DELETE author
+    url: "{{api}}/authors/{{author_id}}"
+    method: delete
+    expect:
+      status: 410
+  - name: DELETE book
+    url: "{{api}}/books/{{book_id}}"
+    method: delete
+    expect:
+      status: 410
