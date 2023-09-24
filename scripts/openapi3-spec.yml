@@ -13,7 +13,7 @@ externalDocs:
   description: Find out more on the GitHub repo
   url: https://github.com/Adophilus/guo-api
 servers:
-  - url: 'https://guo-api.adophilus.xyz/api'
+  - url: 'https://guo-api.onrender.com/api'
 paths:
   /authors:
     post:
